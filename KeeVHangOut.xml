@@ -18,7 +18,7 @@
 </ModulePrefs>
 <Content type="html">  <![CDATA[
 	<script src="//plus.google.com/hangouts/_/api/v1/hangout.js">   </script> // Might have to change this !!!
-    <script src="https://www.dropbox.com/s/tc5pgpfd7i53h5f/mqttws31.js?dl=0"
+    <script src="https://www.dropbox.com/s/tc5pgpfd7i53h5f/mqttws31.js?dl=0" </script>
     <script type="text/javascript" language="javascript"> 
 	
     
