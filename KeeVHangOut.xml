@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+<!-- Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *      
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License
+-->
+<ModulePrefs title="The classy robot hangout">
+  <Require feature="rpc"/>
+  <Require feature="views"/>
+</ModulePrefs>
+<Content type="html">  <![CDATA[
+	<script src="//plus.google.com/hangouts/_/api/v1/hangout.js">   </script> // Might have to change this !!!
+    <script src="https://www.dropbox.com/s/tc5pgpfd7i53h5f/mqttws31.js?dl=0"
+    <script type="text/javascript" language="javascript"> 
+	
+    
+	//Parameters :
+	//var command = " ";
+	var hostname=" ";
+	var port=1883;
+	var topic= "default"; // change instances of "Ananth" to var topic
+    
+
+    function updateTopic(){
+      console.log("Setting Topic");
+      topic = document.getElementById("topic").value;
+      gapi.hangout.data.setValue("topic", topic);
+      console.log("State data set");
+    }
+	
+	// Create a client instance
+client = new Paho.MQTT.Client(hostname, Number(port), "clientId");
+
+// set callback handlers
+client.onConnectionLost = onConnectionLost;
+client.onMessageArrived = onMessageArrived;
+
+// connect the client
+client.connect({onSuccess:onConnect});
+
+
+// called when the client connects
+function onConnect() {
+  // Once a connection has been made, make a subscription and send a message.
+  console.log("onConnect");
+  client.subscribe("Ananth");
+   
+}
+
+function navigate(command){ //   Use this to update navigation messages , basically payload 
+  
+  message = new Paho.MQTT.Message(command);
+  message.destinationName = "Ananth";
+  client.send(message);
+    }
+
+// called when the client loses its connection
+function onConnectionLost(responseObject) {
+  if (responseObject.errorCode !== 0) {
+    console.log("onConnectionLost:"+responseObject.errorMessage);
+  }
+}
+
+// called when a message arrives
+function onMessageArrived(message) {
+  console.log("onMessageArrived:"+message.payloadString);
+}
+    </script>
+
+    <div id="sharedEndpoint" style="display:none">
+      <center>
+      Enter topic : <input type="text" id="topic" length="32"><br/>
+      <button onclick="updateTopic();">Update Topic</button>
+      </center>
+    </div>
+    <hr/>
+    <p>
+      <table align="center">
+        <tr>
+        <th colspan=3>Robot controls</th>
+        </tr>
+        <tr>
+          <td></td><td><center><button onclick='navigate("forward")'>Forward</button></center></td><td></td>
+        </tr>
+        <tr>
+          <td><center><button onclick='navigate("left")'>Left</button></center></td><td></td><td><button onclick='navigate("right")'>Right</button></center></td>
+        </tr>
+        <tr>
+          <td></td><td><center><button onclick='navigate("back")'>Back</button></center></td><td></td>
+        </tr>
+      </table>
+    </p>
+    <hr/>
+    <center>
+      <iframe border="0" id="response">
+      </iframe>
+    </center>
+    ]]>
+</Content>
+</Module>
